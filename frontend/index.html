@@ -1,19 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>MedScribe AI</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedScribe AI | EHR Assistant</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <header><h1>MedScribe <span>AI</span></h1></header>
-        <div class="controls">
-            <input type="text" id="patientName" placeholder="Patient Name">
-            <button id="startBtn">Start Recording</button>
-            <button id="stopBtn" disabled>Stop</button>
-            <p id="status">Ready</p>
+        <header>
+            <h1>MedScribe <span>AI</span></h1>
+            <p>Ambient Clinical Audio Summarizer</p>
+        </header>
+
+        <div class="main-card">
+            <div class="input-group">
+                <input type="text" id="patientName" placeholder="Enter Patient Name..." autocomplete="off">
+                <button id="startBtn" class="btn-primary">Start Recording</button>
+                <button id="stopBtn" class="btn-danger" disabled>Stop</button>
+            </div>
+            
+            <div class="status-bar">
+                Status: <span id="status">Ready</span>
+            </div>
         </div>
-        <div class="card"><div id="output">EHR Summary will appear here...</div></div>
+
+        <div class="result-container">
+            <h3>Structured EHR Summary</h3>
+            <div id="output" class="output-box">
+                <p class="placeholder">Awaiting clinical encounter data...</p>
+            </div>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
