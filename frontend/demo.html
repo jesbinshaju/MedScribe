@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MedScribe AI | Clinical Demo</title>
+    <style>
+        :root { --primary: #2563eb; --bg: #f8fafc; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); display: flex; justify-content: center; padding: 50px; }
+        .container { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 600px; }
+        header { text-align: center; border-bottom: 2px solid #e2e8f0; margin-bottom: 30px; padding-bottom: 20px; }
+        h1 { color: #1e293b; margin: 0; }
+        h1 span { color: var(--primary); }
+        .input-group { margin-bottom: 20px; }
+        input { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+        .controls { display: flex; gap: 10px; margin-bottom: 20px; }
+        button { flex: 1; padding: 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 14px; }
+        #startBtn { background: var(--primary); color: white; }
+        #stopBtn { background: #ef4444; color: white; opacity: 0.5; cursor: not-allowed; }
+        .status-area { text-align: center; font-weight: bold; height: 24px; margin-bottom: 20px; color: #64748b; }
+        #resultArea { background: #f1f5f9; padding: 20px; border-radius: 10px; min-height: 150px; border: 1px dashed #cbd5e1; line-height: 1.6; display: none; }
+        .pulse { animation: pulse-red 1.5s infinite; color: #ef4444; }
+        @keyframes pulse-red { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>MedScribe <span>AI</span></h1>
+        <p>Demo Mode (Offline Clinical Parser)</p>
+    </header>
+
+    <div class="input-group">
+        <input type="text" id="patientName" placeholder="Enter Patient Name (e.g. John Doe)">
+    </div>
+
+    <div class="controls">
+        <button id="startBtn">Start Recording</button>
+        <button id="stopBtn" disabled>Stop & Summarize</button>
+    </div>
+
+    <div class="status-area" id="status">Ready to capture encounter...</div>
+
+    <div id="resultArea"></div>
+</div>
+
+<script>
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const status = document.getElementById('status');
+    const resultArea = document.getElementById('resultArea');
+    const pName = document.getElementById('patientName');
+
+    startBtn.onclick = () => {
+        if(!pName.value) { alert("Please enter a patient name"); return; }
+        
+        startBtn.disabled = true;
+        startBtn.style.opacity = "0.5";
+        stopBtn.disabled = false;
+        stopBtn.style.opacity = "1";
+        stopBtn.style.cursor = "pointer";
+        
+        status.innerHTML = '<span class="pulse">● LIVE RECORDING...</span>';
+        resultArea.style.display = "none";
+    };
+
+    stopBtn.onclick = () => {
+        stopBtn.disabled = true;
+        stopBtn.style.opacity = "0.5";
+        status.innerHTML = "⏳ AI Analyzing Audio Waves...";
+
+        // Simulate a 3-second delay for "AI Processing"
+        setTimeout(() => {
+            status.innerHTML = "✅ Analysis Complete";
+            status.style.color = "#10b981";
+            
+            showFakeResult();
+            
+            startBtn.disabled = false;
+            startBtn.style.opacity = "1";
+        }, 3000);
+    };
+
+    function showFakeResult() {
+        const name = pName.value;
+        resultArea.style.display = "block";
+        resultArea.innerHTML = `
+            <div style="color: #1e293b">
+                <h3 style="margin-top:0">Clinical Summary: ${name}</h3>
+                <p><strong>Chief Complaint:</strong> Persistent dry cough and mild chest congestion for 4 days.</p>
+                <p><strong>Assessment:</strong> Patient shows signs of acute bronchitis. Lungs are clear on auscultation, no wheezing noted.</p>
+                <hr style="border: 0; border-top: 1px solid #cbd5e1">
+                <p><strong>Prescriptions:</strong></p>
+                <ul style="margin-bottom:0">
+                    <li><strong>Azithromycin:</strong> 500mg once daily (3 days)</li>
+                    <li><strong>Benzonatate:</strong> 100mg as needed for cough</li>
+                </ul>
+                <br>
+                <details>
+                    <summary style="cursor:pointer; color:var(--primary); font-size: 0.8em;">View AI Transcript</summary>
+                    <p style="font-size: 0.8em; color: #64748b; font-style: italic;">
+                        "Hello Mr. ${name.split(' ')[0]}, how are you feeling? Okay, so a cough for 4 days. 
+                        Any fever? No fever. Let me listen to your lungs. Breath in... okay. 
+                        I'm going to give you some Azithromycin for the infection and 
+                        Tessalon Pearles for that cough. Drink plenty of fluids."
+                    </p>
+                </details>
+            </div>
+        `;
+    }
+</script>
+
+</body>
+</html>
